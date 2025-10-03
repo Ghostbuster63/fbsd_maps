@@ -1,0 +1,9 @@
+
+cd ./backend/flask
+source ../venv/bin/active
+./run
+
+
+cd ./frontend
+pnpm run dev --host 192.168.13.102
+
