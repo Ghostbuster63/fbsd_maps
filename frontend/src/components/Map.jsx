@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 //import { RedPin, BluePin, GrnPin, YelPin } from "./Pins";
 import { RedPoints, BluePoints, YelPoints, GrnPoints, OrgPoints } from "./Points";
 import config from "../data/config.json";
+import "./GeolocationMarker";
 
 import {
   APIProvider,
