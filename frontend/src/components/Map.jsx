@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 //import { RedPin, BluePin, GrnPin, YelPin } from "./Pins";
 import { RedPoints, BluePoints, YelPoints, GrnPoints, OrgPoints } from "./Points";
 import config from "../data/config.json";
@@ -11,13 +11,37 @@ import {
   useMap,
   AdvancedMarker,
   InfoWindow,
+  MapCameraChangedEvent,
 } from "@vis.gl/react-google-maps";
+  //MapCameraProps,
 
+const INITIAL_CAMERA = {
+    center: { lat: 50.52088296701928, lng: -110.21465690222468 },
+    zoom: 18
+};
 
 //export function Intro() {
 export const MapComp = () => {
-  const center = { lat: 50.52088296701928, lng: -110.21465690222468 };
-  const zoom = 18;
+
+  const [zoom, setZoom] = useState(18);
+
+  const [cameraProps, setCameraProps] =
+    useState(INITIAL_CAMERA);
+
+  const handleCameraChange = useCallback(
+    (ev: MapCameraChangedEvent) =>
+    {
+      setCameraProps(ev.detail);
+      console.log('ev',ev.detail);
+      console.log('ev',ev.detail.zoom);
+      setZoom(ev.detail.zoom);
+      console.log('zoom',zoom);
+    }
+  );
+
+
+//  const center = { lat: 50.52088296701928, lng: -110.21465690222468 };
+//  const zoom = 18;
 
   const MapTypeId = {
     HYBRID: 'hybrid',
@@ -33,6 +57,13 @@ export const MapComp = () => {
     mapTypeId: MapTypeId.SATELLITE
   };
 
+  const onZoomChanged = () => {
+    console.log('zoom',this.googleMap.current.getZoom())
+  };
+
+//          defaultZoom={zoom}
+//          defaultCenter={center}
+
   return (
     <>
     <h3>
@@ -44,11 +75,10 @@ export const MapComp = () => {
     >
       <div style={{ height: "95vh", width: "95%", overflow:"visible" }}>
         <Map 
-          defaultZoom={zoom}
-          defaultCenter={center}
           mapId={'ADE'}
           styling={'overflow: visible'}
           mapTypeId={mapConf.mapTypeId}
+          {...cameraProps} onCameraChanged={handleCameraChange}
          >
           <RedPoints zoom={zoom} />
           <BluePoints zoom={zoom} />
